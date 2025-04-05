@@ -3,19 +3,39 @@ import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'reac
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const navigation = useNavigation();
 
     const handleLogin = () => {
+        const allowedDomains = [
+            'gmail.com', 'yahoo.com', 'outlook.com',
+            'hotmail.com', 'icloud.com', 'aol.com',
+            'protonmail.com', 'zoho.com', 'gmx.com',
+            'yandex.com', 'mail.com'
+        ];
+    
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
         if (!email || !password) {
-            Alert.alert('Error', 'Please enter both username and password');
+            Alert.alert('Error', 'Please enter both email and password');
+        } else if (!emailRegex.test(email)) {
+            Alert.alert('Invalid Email', 'Please enter a valid email address');
         } else {
-            Alert.alert('Logged In', `Welcome, ${email}!`);
+            const emailDomain = email.split('@')[1];
+            if (!allowedDomains.includes(emailDomain)) {
+                Alert.alert('Invalid Domain', 'Please use a supported email provider');
+            } else {
+                navigation.navigate('Home');
+            }
         }
     };
+         
 
     return (
         <LinearGradient
