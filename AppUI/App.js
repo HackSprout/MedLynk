@@ -17,7 +17,6 @@ export default function App() {
         {/* <Stack.Screen name="Signup" component={Signup} /> */}
         <Stack.Screen name="Home" component={Main} />
         <Stack.Screen name="PDFViewer" component={PDFViewer} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );

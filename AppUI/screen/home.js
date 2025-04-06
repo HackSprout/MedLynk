@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -9,16 +9,35 @@ import RecordsView from '../components/RecordsView';
 import AppointmentsView from '../components/AppointmentsView'; 
 import TranscriptsView from '../components/TranscriptsView';
 import useVoiceRecognition from '../hooks/useVoiceRecognition';
+import ChatLog from '../components/ChatLog';
+import { fetchParsedPdfs } from '../backend';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [parsedPdfs, setParsedPdfs] = useState(null);
   const {
     transcript,
     isListening,
     startListening,
     stopListening,
   } = useVoiceRecognition();
+
+  useEffect(() => {
+    const loadPdfs = async () => {
+      try {
+        const userEmail = 'jasonboe510@gmail.com';
+        console.log('Fetching PDFs for:', userEmail);
+        const result = await fetchParsedPdfs(userEmail);
+        console.log('Fetched PDFs:', result);
+        setParsedPdfs(result);
+      } catch (error) {
+        console.error('Error loading PDFs:', error);
+      }
+    };
+
+    loadPdfs();
+  }, []);
   
 
   const handleTabPress = (tabId) => {
@@ -42,6 +61,7 @@ export default function Home() {
       next ? startListening() : stopListening();
     }
   };
+
   
 
   const renderMainContent = () => {
@@ -57,13 +77,10 @@ export default function Home() {
         default:
           return (
             (isRecording || activeTab === null) && (
-              <View style={styles.transcriptContainer}>
-                <BlurView intensity={70} style={styles.transcriptBox}>
-                  <Text style={styles.placeholderText}>
-                    {transcript || 'Your conversation will appear here...'}
-                  </Text>
-                </BlurView>
-              </View>
+              <ChatLog 
+                transcript={transcript}
+                isListening={isListening}
+              />
             )
           );
       }
