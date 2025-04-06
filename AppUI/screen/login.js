@@ -89,7 +89,9 @@ export default function Login() {
                     <Text style={styles.loginButtonText}>Login</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.registerContainer}>
+                <TouchableOpacity style={styles.registerContainer}
+                onPress={() => navigation.navigate('Signup')}
+                >
                     <Text style={styles.registerText}>Don't have an account? Register</Text>
                 </TouchableOpacity>
             </BlurView>
