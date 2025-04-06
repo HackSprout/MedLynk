@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
+import { Ionicons } from '@expo/vector-icons';
 import TopNavButtons from '../components/TopNavButtons';
 import InfoView from '../components/InfoView'; 
 
@@ -35,7 +36,7 @@ export default function Home() {
 
         <TouchableOpacity style={styles.callButton}>
           
-          <Text style={styles.callButtonText}>Press</Text>
+          <Ionicons name="pulse-outline" size={40} color="#fff" style={styles.icon} />
         
         </TouchableOpacity>
       </View>
