@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import TopNavButtons from '../components/TopNavButtons';
 import InfoView from '../components/InfoView'; 
 import CallBotButton from '../components/CallBotButton';
+import RecordsView from '../components/RecordsView';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
@@ -29,6 +30,8 @@ export default function Home() {
 
         {activeTab === 'info' ? (
           <InfoView />
+        ) : activeTab === 'records' ? (
+          <RecordsView />
         ) : (
           <View style={styles.transcriptContainer}>
             {/* <Text style={styles.transcriptLabel}>Transcript</Text> */}
