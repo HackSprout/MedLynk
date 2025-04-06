@@ -41,8 +41,6 @@ const InfoView = () => {
             Sex: <Text style={styles.bold}>{patientInfo.sex}</Text>
           </Text>
 
-          {/* <Text style={styles.sectionTitle}>Patient Report</Text> */}
-
           <Text style={styles.label}>
             Account Number: <Text style={styles.bold}>{patientInfo.accountNumber}</Text>
           </Text>
@@ -71,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scrollView: {
-    padding: 20,
+    padding: 70,
   },
   nameText: {
     fontSize: 22,
