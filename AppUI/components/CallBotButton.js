@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function CallBotButton({ onPress }) {
-  const [isRecording, setIsRecording] = useState(false);
-
+export default function CallBotButton({ onPress, isRecording }) {
   const handlePress = () => {
-    const newState = !isRecording;
-    setIsRecording(newState);
-    if (onPress) onPress(newState);
+    if (onPress) onPress();
   };
 
   return (

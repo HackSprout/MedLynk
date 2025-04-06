@@ -2,18 +2,73 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { Ionicons } from '@expo/vector-icons';
 import TopNavButtons from '../components/TopNavButtons';
 import InfoView from '../components/InfoView'; 
 import CallBotButton from '../components/CallBotButton';
 import RecordsView from '../components/RecordsView';
+import AppointmentsView from '../components/AppointmentsView'; 
+import TranscriptsView from '../components/TranscriptsView';
+import useVoiceRecognition from '../hooks/useVoiceRecognition';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const {
+    transcript,
+    isListening,
+    startListening,
+    stopListening,
+  } = useVoiceRecognition();
+  
 
   const handleTabPress = (tabId) => {
+    if (isRecording) {
+      setIsRecording(false); 
+    }
     setActiveTab(tabId);
+
   };
+
+  const handleBotPress = () => {
+    if (activeTab !== null) {
+      setActiveTab(null);
+      setIsRecording(false);
+      stopListening();
+    } else {
+      const next = !isRecording;
+      setIsRecording(next);
+      console.log(next ? 'Recording started' : 'Recording stopped');
+
+      next ? startListening() : stopListening();
+    }
+  };
+  
+
+  const renderMainContent = () => {
+    switch (activeTab) {
+      case 'info':
+        return <InfoView />;
+      case 'records':
+        return <RecordsView />;
+      case 'apt':
+        return <AppointmentsView />;
+      case 'transcripts':
+        return <TranscriptsView />;
+        default:
+          return (
+            (isRecording || activeTab === null) && (
+              <View style={styles.transcriptContainer}>
+                <BlurView intensity={70} style={styles.transcriptBox}>
+                  <Text style={styles.placeholderText}>
+                    {transcript || 'Your conversation will appear here...'}
+                  </Text>
+                </BlurView>
+              </View>
+            )
+          );
+      }
+    };
+  
 
   return (
     <LinearGradient
@@ -28,28 +83,9 @@ export default function Home() {
           onTabPress={handleTabPress} 
         />
 
-        {activeTab === 'info' ? (
-          <InfoView />
-        ) : activeTab === 'records' ? (
-          <RecordsView />
-        ) : (
-          <View style={styles.transcriptContainer}>
-            {/* <Text style={styles.transcriptLabel}>Transcript</Text> */}
-            <BlurView intensity={70} style={styles.transcriptBox}>
-              <Text style={styles.placeholderText}>Your conversation will appear here...</Text>
-            </BlurView>
-          </View>
-        )}
-
-        <CallBotButton onPress={(recording) => {
-          if (recording) {
-            console.log("Recording started");
-            // TODO: Start react-native-voice or speech logic here
-          } else {
-            console.log("Recording stopped");
-            // TODO: Stop voice recording and send to Gemini
-          }
-        }} />
+        {renderMainContent()}
+        
+      <CallBotButton onPress={handleBotPress} isRecording={isRecording} />
       </View>
     </LinearGradient>
   );
