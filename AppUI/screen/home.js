@@ -5,6 +5,7 @@ import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import TopNavButtons from '../components/TopNavButtons';
 import InfoView from '../components/InfoView'; 
+import CallBotButton from '../components/CallBotButton';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
@@ -26,19 +27,26 @@ export default function Home() {
           onTabPress={handleTabPress} 
         />
 
-        <View style={styles.transcriptContainer}>
-          <BlurView intensity={70} style={styles.transcriptBox}>
-            
-            <Text style={styles.placeholderText}>Example (BOT: Hello Sam Sulek! How may I help you today?)</Text>
-          
-          </BlurView>
-        </View>
+        {activeTab === 'info' ? (
+          <InfoView />
+        ) : (
+          <View style={styles.transcriptContainer}>
+            {/* <Text style={styles.transcriptLabel}>Transcript</Text> */}
+            <BlurView intensity={70} style={styles.transcriptBox}>
+              <Text style={styles.placeholderText}>Your conversation will appear here...</Text>
+            </BlurView>
+          </View>
+        )}
 
-        <TouchableOpacity style={styles.callButton}>
-          
-          <Ionicons name="pulse-outline" size={40} color="#fff" style={styles.icon} />
-        
-        </TouchableOpacity>
+        <CallBotButton onPress={(recording) => {
+          if (recording) {
+            console.log("Recording started");
+            // TODO: Start react-native-voice or speech logic here
+          } else {
+            console.log("Recording stopped");
+            // TODO: Stop voice recording and send to Gemini
+          }
+        }} />
       </View>
     </LinearGradient>
   );
@@ -74,23 +82,5 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: '#666',
     padding: 16,
-  },
-
-  callButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#FF4444',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center', // takes the button to middle
-    marginBottom: 30,
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  callButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
   },
 });
