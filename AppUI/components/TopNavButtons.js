@@ -14,7 +14,7 @@ const TopNavButtons = ({ activeTab, onTabPress }) => {
       {tabs.map((tab) => (
         <TouchableOpacity
           key={tab.id}
-          style={[activeTab === tab.id && styles.activeButton]}
+          style={[activeTab === tab.id ? styles.activeButton : styles.inactiveButton]}
           onPress={() => onTabPress(tab.id)}
         >
           <Text 
@@ -35,23 +35,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    padding: 20,
+    padding: 25,
     alignItems: 'center',
     overflow: 'hidden',
+  },
+  inactiveButton: {
+    backgroundColor: 'transparent',
   },
   activeButton: {
     backgroundColor: 'transparent',
     fontSize: 20,
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#666',
     textAlign: 'center',
   },
   activeButtonText: {
     color: '#333',
-    fontWeight: '500',
-    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
