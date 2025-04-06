@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 const TopNavButtons = ({ activeTab, onTabPress }) => {
   const tabs = [
     { id: 'records', label: 'Records' },
-    { id: 'transcripts', label: 'Transcripts' },
     { id: 'apt', label: 'Appointments' },
     { id: 'info', label: 'Info' },
   ];

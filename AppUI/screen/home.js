@@ -7,7 +7,6 @@ import InfoView from '../components/InfoView';
 import CallBotButton from '../components/CallBotButton';
 import RecordsView from '../components/RecordsView';
 import AppointmentsView from '../components/AppointmentsView'; 
-import TranscriptsView from '../components/TranscriptsView';
 import useVoiceRecognition from '../hooks/useVoiceRecognition';
 import ChatLog from '../components/ChatLog';
 import { fetchParsedPdfs } from '../backend';
@@ -72,9 +71,7 @@ export default function Home() {
         return <RecordsView />;
       case 'apt':
         return <AppointmentsView />;
-      case 'transcripts':
-        return <TranscriptsView />;
-        default:
+      default:
           return (
             (isRecording || activeTab === null) && (
               <ChatLog 
