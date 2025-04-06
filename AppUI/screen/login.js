@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { useNavigation } from '@react-navigation/native';
+import { loginWithCalendly } from '../backend';
 
 
 export default function Login() {
@@ -12,7 +13,7 @@ export default function Login() {
     const [rememberMe, setRememberMe] = useState(false);
     const navigation = useNavigation();
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         const allowedDomains = [
             'gmail.com', 'yahoo.com', 'outlook.com',
             'hotmail.com', 'icloud.com', 'aol.com',
@@ -24,15 +25,25 @@ export default function Login() {
     
         if (!email || !password) {
             Alert.alert('Error', 'Please enter both email and password');
-        } else if (!emailRegex.test(email)) {
+            return;
+        }
+        
+        if (!emailRegex.test(email)) {
             Alert.alert('Invalid Email', 'Please enter a valid email address');
-        } else {
-            const emailDomain = email.split('@')[1];
-            if (!allowedDomains.includes(emailDomain)) {
-                Alert.alert('Invalid Domain', 'Please use a supported email provider');
-            } else {
-                navigation.navigate('Home');
-            }
+            return;
+        }
+        
+        const emailDomain = email.split('@')[1];
+        if (!allowedDomains.includes(emailDomain)) {
+            Alert.alert('Invalid Domain', 'Please use a supported email provider');
+            return;
+        }
+
+        try {
+            await loginWithCalendly();
+            navigation.navigate('Home');
+        } catch (error) {
+            Alert.alert('Login Failed', 'Unable to connect to Calendly. Please try again.');
         }
     };
          
