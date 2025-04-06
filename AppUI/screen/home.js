@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import TopNavButtons from '../components/TopNavButtons';
@@ -15,6 +15,8 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [parsedPdfs, setParsedPdfs] = useState(null);
+  const slideAnim = useRef(new Animated.Value(-50)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const {
     transcript,
     isListening,
@@ -23,6 +25,19 @@ export default function Home() {
   } = useVoiceRecognition();
 
   useEffect(() => {
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true
+      })
+    ]).start();
+
     const loadPdfs = async () => {
       try {
         const userEmail = 'jasonboe510@gmail.com';
@@ -43,6 +58,23 @@ export default function Home() {
     if (isRecording) {
       setIsRecording(false); 
     }
+    
+    slideAnim.setValue(-50);
+    fadeAnim.setValue(0);
+    
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true
+      })
+    ]).start();
+    
     setActiveTab(tabId);
 
   };
@@ -61,28 +93,39 @@ export default function Home() {
     }
   };
 
+  const renderMainContent = () => {
+    if (activeTab === 'info') {
+      return <InfoView />;
+    }
+    if (activeTab === 'records') {
+      return <RecordsView />;
+    }
+    if (activeTab === 'apt') {
+      return <AppointmentsView />;
+    }
+    if (isRecording || activeTab == null) {
+      return (
+        <ChatLog 
+          transcript={transcript}
+          isListening={isListening}
+        />
+      );
+    }
+    return null;
+  };
   
 
-  const renderMainContent = () => {
-    switch (activeTab) {
-      case 'info':
-        return <InfoView />;
-      case 'records':
-        return <RecordsView />;
-      case 'apt':
-        return <AppointmentsView />;
-      default:
-          return (
-            (isRecording || activeTab === null) && (
-              <ChatLog 
-                transcript={transcript}
-                isListening={isListening}
-              />
-            )
-          );
-      }
-    };
-  
+  const renderAnimatedContent = (content) => {
+    return (
+      <Animated.View style={[{
+        transform: [{ translateY: slideAnim }],
+        opacity: fadeAnim,
+        flex: 1
+      }]}>
+        {content}
+      </Animated.View>
+    );
+  };
 
   return (
     <LinearGradient
@@ -97,7 +140,7 @@ export default function Home() {
           onTabPress={handleTabPress} 
         />
 
-        {renderMainContent()}
+        {renderAnimatedContent(renderMainContent())}
         
       <CallBotButton onPress={handleBotPress} isRecording={isRecording} />
       </View>

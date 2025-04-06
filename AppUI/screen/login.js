@@ -14,38 +14,54 @@ export default function Login() {
     const navigation = useNavigation();
 
     const handleLogin = async () => {
-        const allowedDomains = [
-            'gmail.com', 'yahoo.com', 'outlook.com',
-            'hotmail.com', 'icloud.com', 'aol.com',
-            'protonmail.com', 'zoho.com', 'gmx.com',
-            'yandex.com', 'mail.com'
-        ];
-    
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-        if (!email || !password) {
-            Alert.alert('Error', 'Please enter both email and password');
-            return;
+        const hardcodedEmail = 'jasonboe510@gmail.com';
+        const hardcodedPassword = 'dogs';
+      
+        if (email !== hardcodedEmail || password !== hardcodedPassword) {
+          Alert.alert('Invalid Credentials', 'Email or password is incorrect');
+          return;
         }
-        
-        if (!emailRegex.test(email)) {
-            Alert.alert('Invalid Email', 'Please enter a valid email address');
-            return;
-        }
-        
-        const emailDomain = email.split('@')[1];
-        if (!allowedDomains.includes(emailDomain)) {
-            Alert.alert('Invalid Domain', 'Please use a supported email provider');
-            return;
-        }
-
+      
         try {
-            await loginWithCalendly();
-            navigation.navigate('Home');
+          navigation.navigate('Home');
         } catch (error) {
-            Alert.alert('Login Failed', 'Unable to connect to Calendly. Please try again.');
+          Alert.alert('Login Failed', 'Unable to connect to Calendly. Please try again.');
         }
-    };
+      };
+      
+    // const handleLogin = async () => {
+    //     const allowedDomains = [
+    //         'gmail.com', 'yahoo.com', 'outlook.com',
+    //         'hotmail.com', 'icloud.com', 'aol.com',
+    //         'protonmail.com', 'zoho.com', 'gmx.com',
+    //         'yandex.com', 'mail.com'
+    //     ];
+    
+    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    //     if (!email || !password) {
+    //         Alert.alert('Error', 'Please enter both email and password');
+    //         return;
+    //     }
+        
+    //     if (!emailRegex.test(email)) {
+    //         Alert.alert('Invalid Email', 'Please enter a valid email address');
+    //         return;
+    //     }
+        
+    //     const emailDomain = email.split('@')[1];
+    //     if (!allowedDomains.includes(emailDomain)) {
+    //         Alert.alert('Invalid Domain', 'Please use a supported email provider');
+    //         return;
+    //     }
+
+    //     try {
+    //         // await loginWithCalendly();
+    //         navigation.navigate('Home');
+    //     } catch (error) {
+    //         Alert.alert('Login Failed', 'Unable to connect to Calendly. Please try again.');
+    //     }
+    // };
          
 
     return (

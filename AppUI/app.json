@@ -14,13 +14,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.snehagrg.medlynk"
+      "bundleIdentifier": "com.snehagrg.medlynk",
+      "scheme": "medlynk"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.snehagrg.medlynk",
+      "scheme": "medlynk"
     },
     "web": {
       "favicon": "./assets/favicon.png"

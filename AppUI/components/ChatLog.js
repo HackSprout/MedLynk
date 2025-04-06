@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { requestGemini } from '../backend';
+import { requestGemini, getSchedLink } from '../backend';
 
 const ChatLog = ({ transcript, isListening }) => {
   const [messages, setMessages] = useState([]);
@@ -25,6 +25,8 @@ const ChatLog = ({ transcript, isListening }) => {
         
         setIsLoading(true);
         try {
+          userEmail = 'jasonboe510@gmail.com';
+          doctorEmail = 'falaktulsi@gmail.com';
           console.log('Sending to Gemini:', transcript);
           const response = await requestGemini(transcript);
           console.log('Got response from Gemini:', response);
@@ -33,8 +35,25 @@ const ChatLog = ({ transcript, isListening }) => {
             throw new Error('No reply from Gemini');
           }
           
+            const triggerWords = ["appointment", "book", "schedule", "meeting"];
+            const lowerTranscript = transcript.toLowerCase();
+
+            const hasTrigger = triggerWords.some((word) =>
+            lowerTranscript.includes(word)
+            );
+
+            const link = null;
+
+            if (hasTrigger) {
+            link = await getSchedLink(userEmail, doctorEmail);
+            }
+
+            const replyText = link
+            ? `Here is the link to schedule your appointment: ${link}`
+            : response.reply;
+
           setMessages(prev => [...prev, { 
-            text: response.reply,
+            text: replyText,
             isUser: false, 
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }]);
@@ -53,6 +72,18 @@ const ChatLog = ({ transcript, isListening }) => {
 
     handleNewUserMessage();
   }, [transcript, isListening]);
+
+  useEffect(() => {
+    if (isListening && messages.length === 0) {
+      const welcomeMessage = {
+        text: 'Hi Jason, how may I help you today?',
+        isUser: false,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [isListening]);
+  
 
   const renderMessage = (message, index) => (
     <View 
